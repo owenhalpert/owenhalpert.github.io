@@ -1,4 +1,4 @@
-baseurl      = 
+baseurl      = "owenhalpert.com"
 languageCode = "en-us"
 theme        = "hello-friend-ng"
 paginate     = 10
