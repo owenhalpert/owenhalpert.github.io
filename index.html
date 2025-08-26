@@ -3,64 +3,473 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Owen Halpert</title>
+    <title>Owen Halpert - Vending Machine</title>
     <style>
         body {
-            font-family: 'Georgia', serif;
-            margin: 40px;
-            line-height: 1.6;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            height: 100vh;
+            width: 100vw;
             display: flex;
-            max-width: 67%;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
-        .left {
-            flex: 1;
+
+        .vending-machine {
+            width: min(400px, 90vw);
+            height: min(600px, 95vh);
+            max-width: 400px;
+            max-height: 600px;
+            background: linear-gradient(145deg, #bdc3c7, #95a5a6);
+            border-radius: 20px;
+            box-shadow: 
+                20px 20px 40px rgba(0,0,0,0.3),
+                -5px -5px 20px rgba(255,255,255,0.1),
+                inset -5px -5px 15px rgba(0,0,0,0.2),
+                inset 5px 5px 15px rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
         }
-        .right {
-            flex: 1;
-            margin-left: 40px;
-        }
-        h1 {
-            margin-top: 10px;
-            margin-bottom: 30px;
+
+        .machine-header {
+            background: linear-gradient(145deg, #e74c3c, #c0392b);
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
             font-weight: bold;
-            font-size: 2.0em;
-            text-decoration: underline;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            box-shadow: inset 0 -5px 10px rgba(0,0,0,0.3);
         }
-        a {
-            color: #0066cc;
+
+        .display-window {
+            background: linear-gradient(145deg, #34495e, #2c3e50);
+            margin: 20px;
+            height: 350px;
+            border-radius: 15px;
+            border: 8px solid #7f8c8d;
+            box-shadow: 
+                inset 5px 5px 15px rgba(0,0,0,0.5),
+                inset -5px -5px 15px rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(255,255,255,0.1) 0%,
+                rgba(255,255,255,0.05) 25%,
+                rgba(255,255,255,0.02) 50%,
+                rgba(0,0,0,0.05) 75%,
+                rgba(0,0,0,0.1) 100%);
+            border-radius: 10px;
+            pointer-events: none;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 15px;
+            padding: 20px;
+            height: 100%;
+        }
+
+        .vending-item {
+            background: linear-gradient(145deg, #f39c12, #e67e22);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            color: white;
             text-decoration: none;
-            font-size: 1.0em;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 
+                3px 3px 8px rgba(0,0,0,0.3),
+                inset 2px 2px 5px rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
         }
-        a:hover {
-            text-decoration: underline;
+
+        .vending-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                5px 5px 15px rgba(0,0,0,0.4),
+                inset 2px 2px 5px rgba(255,255,255,0.3);
         }
-        b {
-            font-size: 1.0em;
+
+        .vending-item.github {
+            background: linear-gradient(145deg, #9b59b6, #8e44ad);
         }
-        .project-desc {
-            font-style: italic;
-            margin-left: 20px;
+
+        .vending-item.resume {
+            background: linear-gradient(145deg, #3498db, #2980b9);
         }
-        c {
-            font-size: 1.0em;
+
+        .vending-item.email {
+            background: linear-gradient(145deg, #e74c3c, #c0392b);
+        }
+
+        .vending-item.project {
+            background: linear-gradient(145deg, #27ae60, #229954);
+        }
+
+        .item-code {
+            position: absolute;
+            top: 5px;
+            left: 8px;
+            font-size: 12px;
+            opacity: 0.8;
+            font-weight: normal;
+        }
+
+        .control-panel {
+            background: linear-gradient(145deg, #34495e, #2c3e50);
+            margin: 0 20px 20px 20px;
+            height: 100px;
+            border-radius: 10px;
+            box-shadow: inset 3px 3px 8px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 15px;
+        }
+
+        .lcd-display {
+            background: #0f0f0f;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 18px;
+            width: 60px;
+            height: 30px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #2c3e50;
+            box-shadow: 
+                inset 2px 2px 5px rgba(0,0,0,0.8),
+                0 0 10px rgba(0,255,65,0.3);
+            text-shadow: 0 0 8px #00ff41;
+        }
+
+        .lcd-display::before {
+            content: '';
+            position: absolute;
+            width: 56px;
+            height: 26px;
+            background: linear-gradient(135deg, 
+                rgba(255,255,255,0.1) 0%,
+                rgba(255,255,255,0.02) 50%,
+                rgba(0,0,0,0.1) 100%);
+            border-radius: 3px;
+            pointer-events: none;
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 8px;
+        }
+
+        .key {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(145deg, #95a5a6, #7f8c8d);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2c3e50;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 
+                2px 2px 5px rgba(0,0,0,0.3),
+                inset 1px 1px 3px rgba(255,255,255,0.2);
+            transition: all 0.1s ease;
+        }
+
+        .key:active {
+            transform: scale(0.95);
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .coin-slot {
+            width: 60px;
+            height: 8px;
+            background: #2c3e50;
+            border-radius: 4px;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .coin-slot::before {
+            content: "INSERT COIN";
+            position: absolute;
+            top: -20px;
+            left: 4px;
+            font-size: 8px;
+            color: #ecf0f1;
+            font-weight: bold;
+        }
+
+        .dispensing-slot {
+            background: linear-gradient(145deg, #2c3e50, #34495e);
+            margin: 0 15px;
+            height: 40px;
+            border-radius: 5px;
+            box-shadow: inset 3px 3px 8px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .dispensing-slot::before {
+            content: "COLLECT ITEM HERE";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            color: #95a5a6;
+            font-weight: bold;
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(52, 152, 219, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(52, 152, 219, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(52, 152, 219, 0.5); }
+        }
+
+        .selected {
+            animation: glow 1s infinite;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 15px;
+            padding: 20px;
+            height: 100%;
+        }
+
+        .back-button {
+            background: linear-gradient(145deg, #95a5a6, #7f8c8d);
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 12px;
+            box-shadow: 
+                3px 3px 8px rgba(0,0,0,0.3),
+                inset 2px 2px 5px rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            cursor: pointer;
+            grid-column: span 2;
+            height: 40px;
+        }
+
+        .back-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 
+                4px 4px 10px rgba(0,0,0,0.4),
+                inset 2px 2px 5px rgba(255,255,255,0.3);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .vending-item svg {
+            width: 40px;
+            height: 40px;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+            margin-bottom: 8px;
+        }
+
+        .vending-item .icon-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
         }
     </style>
 </head>
 <body>
-    <div class="left">
-        <h1>Owen Halpert</h1>
-        <p>👋</p>
-        <p><a href="https://github.com/owenhalpert">GitHub</a></p>
-        <p><a href="static/resume.pdf">Resume</a></p>
-        <p><a href="mailto:hello@owenhalpert.com">Email</a></p>
+    <div class="vending-machine">
+        <div class="machine-header">
+            OWEN HALPERT
+        </div>
+        
+        <div class="display-window">
+            <div class="glass-effect"></div>
+            <div class="items-grid" id="main-grid">
+                <a href="https://github.com/owenhalpert" class="vending-item github">
+                    <span class="item-code">A1</span>
+                    <svg viewBox="0 0 24 24" fill="white">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                </a>
+                
+                <a href="static/resume.pdf" class="vending-item resume">
+                    <span class="item-code">A2</span>
+                    <svg viewBox="0 0 24 24" fill="white">
+                        <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                    </svg>
+                </a>
+                
+                <a href="mailto:hello@owenhalpert.com" class="vending-item email">
+                    <span class="item-code">B1</span>
+                    <svg viewBox="0 0 24 24" fill="white">
+                        <path d="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z"/>
+                    </svg>
+                </a>
+                
+                <div class="vending-item project" onclick="showProjects()">
+                    <span class="item-code">B2</span>
+                    <div class="icon-label">Projects</div>
+                </div>
+            </div>
+
+            <div class="projects-grid hidden" id="projects-grid">
+                <a href="/compmusic" class="vending-item project">
+                    <span class="item-code">A1</span>
+                    <div class="icon-label">Coachella Over The Years</div>
+                </a>
+                
+                <div class="vending-item" style="background: linear-gradient(145deg, #95a5a6, #7f8c8d); opacity: 0.5;">
+                    <span class="item-code">A2</span>
+                    <div style="font-size: 12px;">Coming Soon</div>
+                </div>
+                
+                <div class="vending-item" style="background: linear-gradient(145deg, #95a5a6, #7f8c8d); opacity: 0.5;">
+                    <span class="item-code">B1</span>
+                    <div style="font-size: 12px;">Coming Soon</div>
+                </div>
+                
+                <div class="back-button" onclick="showMain()">
+                    <div>← BACK</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="control-panel">
+            <div class="keypad">
+                <div class="key" onclick="selectItem('A')">A</div>
+                <div class="key" onclick="selectItem('B')">B</div>
+                <div class="key" onclick="selectItem('C')">C</div>
+                <div class="key" onclick="selectItem('1')">1</div>
+                <div class="key" onclick="selectItem('2')">2</div>
+                <div class="key" onclick="selectItem('3')">3</div>
+            </div>
+            <div class="lcd-display" id="lcd">--</div>
+            <div class="coin-slot"></div>
+        </div>
+        
+        <div class="dispensing-slot"></div>
     </div>
-    <div class="right">
-        <h2>Projects</h2>
-        <ul>
-            <li><a href="/compmusic">Coachella Over The Years</a>
-                <div class="project-desc">For "Computational Musicology" at the Universiteit van Amsterdam (2023)</div>
-            </li>
-        </ul>
-    </div>
+
+    <script>
+        let selectedCode = '';
+        
+        function selectItem(input) {
+            selectedCode += input;
+            
+            // Update LCD display
+            const lcd = document.getElementById('lcd');
+            if (selectedCode.length === 1) {
+                lcd.textContent = selectedCode + '-';
+            } else if (selectedCode.length === 2) {
+                lcd.textContent = selectedCode;
+            }
+            
+            if (selectedCode.length === 2) {
+                const items = document.querySelectorAll('.vending-item');
+                items.forEach(item => item.classList.remove('selected'));
+                
+                const mainGrid = document.getElementById('main-grid');
+                const projectsGrid = document.getElementById('projects-grid');
+                
+                let codeMap;
+                if (!mainGrid.classList.contains('hidden')) {
+                    // Main menu codes
+                    codeMap = {
+                        'a1': '.github',
+                        'a2': '.resume', 
+                        'b1': '.email',
+                        'b2': '.project'
+                    };
+                } else {
+                    // Projects menu codes
+                    codeMap = {
+                        'a1': 'a[href="/compmusic"]'
+                    };
+                }
+                
+                const targetItem = document.querySelector(codeMap[selectedCode.toLowerCase()]);
+                if (targetItem) {
+                    targetItem.classList.add('selected');
+                    setTimeout(() => {
+                        targetItem.click();
+                        lcd.textContent = '--';
+                    }, 1000);
+                } else {
+                    // Invalid code - flash error
+                    lcd.style.color = '#ff4444';
+                    lcd.textContent = 'ER';
+                    setTimeout(() => {
+                        lcd.style.color = '#00ff41';
+                        lcd.textContent = '--';
+                    }, 1000);
+                }
+                
+                selectedCode = '';
+            } else if (selectedCode.length > 2) {
+                selectedCode = input;
+                lcd.textContent = selectedCode + '-';
+            }
+        }
+        
+        function showProjects() {
+            const mainGrid = document.getElementById('main-grid');
+            const projectsGrid = document.getElementById('projects-grid');
+            const lcd = document.getElementById('lcd');
+            
+            mainGrid.classList.add('hidden');
+            projectsGrid.classList.remove('hidden');
+            lcd.textContent = '--';
+            selectedCode = '';
+        }
+        
+        function showMain() {
+            const mainGrid = document.getElementById('main-grid');
+            const projectsGrid = document.getElementById('projects-grid');
+            const lcd = document.getElementById('lcd');
+            
+            projectsGrid.classList.add('hidden');
+            mainGrid.classList.remove('hidden');
+            lcd.textContent = '--';
+            selectedCode = '';
+        }
+    </script>
 </body>
 </html>
