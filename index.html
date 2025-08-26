@@ -3,64 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Owen Halpert</title>
+    <title>☆ Owen Halpert ☆</title>
     <style>
-        body {
-            font-family: 'Georgia', serif;
-            margin: 40px;
-            line-height: 1.6;
-            display: flex;
-            max-width: 67%;
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
         }
+        
+        @keyframes rainbow {
+            0% { color: #ff0000; }
+            16% { color: #ff8000; }
+            33% { color: #ffff00; }
+            50% { color: #00ff00; }
+            66% { color: #0080ff; }
+            83% { color: #8000ff; }
+            100% { color: #ff0080; }
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.7; }
+        }
+        
+        body {
+            font-family: 'Verdana', 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(45deg, #000080, #800080, #000040);
+            background-size: 400% 400%;
+            animation: gradient-shift 8s ease infinite;
+            color: #00ffff;
+            min-height: 100vh;
+            overflow-x: auto;
+        }
+        
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            display: flex;
+            max-width: none;
+            position: relative;
+        }
+        
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            color: #ffff00;
+            animation: sparkle 2s infinite;
+        }
+        
         .left {
             flex: 1;
+            background: rgba(0, 0, 0, 0.7);
+            border: 3px solid #ff00ff;
+            padding: 20px;
+            margin-right: 20px;
+            box-shadow: 0 0 20px #ff00ff;
         }
+        
         .right {
             flex: 1;
-            margin-left: 40px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 3px solid #00ff00;
+            padding: 20px;
+            box-shadow: 0 0 20px #00ff00;
         }
+        
         h1 {
             margin-top: 10px;
             margin-bottom: 30px;
             font-weight: bold;
-            font-size: 2.0em;
-            text-decoration: underline;
-        }
-        a {
-            color: #0066cc;
+            font-size: 2.5em;
+            text-align: center;
+            animation: rainbow 3s linear infinite;
+            text-shadow: 2px 2px 4px #000000, 0 0 10px currentColor;
             text-decoration: none;
-            font-size: 1.0em;
         }
-        a:hover {
+        
+        h2 {
+            color: #00ff00;
+            font-size: 1.8em;
+            text-shadow: 2px 2px 4px #000000;
             text-decoration: underline;
         }
-        b {
-            font-size: 1.0em;
+        
+        a {
+            color: #ffff00;
+            text-decoration: none;
+            font-size: 1.1em;
+            text-shadow: 1px 1px 2px #000000;
+            font-weight: bold;
         }
+        
+        a:hover {
+            color: #ff00ff;
+            text-decoration: underline;
+            text-shadow: 0 0 5px currentColor;
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
         .project-desc {
             font-style: italic;
             margin-left: 20px;
+            color: #80ff80;
+            font-size: 0.9em;
         }
-        c {
-            font-size: 1.0em;
+        
+        .marquee {
+            background: #000000;
+            color: #ff0000;
+            padding: 10px 0;
+            margin: 20px 0;
+            border: 2px solid #ff0000;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        
+        .marquee span {
+            display: inline-block;
+            padding-left: 100%;
+            animation: scroll 15s linear infinite;
+            font-weight: bold;
+        }
+        
+        @keyframes scroll {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        .counter {
+            background: #000000;
+            color: #00ff00;
+            padding: 10px;
+            border: 2px solid #00ff00;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            box-shadow: inset 0 0 10px #00ff00;
+        }
+        
+        .webring {
+            background: #000040;
+            border: 2px solid #0080ff;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .webring a {
+            color: #0080ff;
+            margin: 0 10px;
+        }
+        
+        .construction {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .construction img {
+            vertical-align: middle;
+        }
+        
+        .glow {
+            text-shadow: 0 0 10px currentColor;
         }
     </style>
 </head>
 <body>
-    <div class="left">
-        <h1>Owen Halpert</h1>
-        <p>👋</p>
-        <p><a href="https://github.com/owenhalpert">GitHub</a></p>
-        <p><a href="static/resume.pdf">Resume</a></p>
-        <p><a href="mailto:hello@owenhalpert.com">Email</a></p>
+    <div class="stars" id="stars"></div>
+    
+    <div class="marquee">
+        <span>★☆★ WELCOME TO OWEN'S WEBSITE ★☆★ LAST UPDATED: 8/26/2025 ★☆★</span>
     </div>
-    <div class="right">
-        <h2>Projects</h2>
-        <ul>
-            <li><a href="/compmusic">Coachella Over The Years</a>
-                <div class="project-desc">For "Computational Musicology" at the Universiteit van Amsterdam (2023)</div>
-            </li>
-        </ul>
+    
+    <div class="container">
+        <div class="left">
+            <h1>Owen Halpert</h1>
+            <p style="font-size: 1.5em;">👋 GREETINGS</p>
+            
+            <h2 style="color: #ff00ff;">LINKS:</h2>
+            <p>🔗 <a href="https://github.com/owenhalpert" class="glow">GitHub</a></p>
+            <p>📄 <a href="static/resume.pdf" class="glow">Resume</a></p>
+            <p>📧 <a href="mailto:hello@owenhalpert.com" class="glow">E-Mail</a></p>
+        </div>
+        
+        <div class="right">
+            <h2>★ PROJECTS ★</h2>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: 20px;">
+                    🎵 <a href="/compmusic" class="glow">Coachella Over The Years</a>
+                    <div class="project-desc">For "Computational Musicology" at the Universiteit van Amsterdam (2023)</div>
+                    <div style="color: #ff0000; font-size: 0.8em; margin-left: 20px;">★NEW★</div>
+                </li>
+            </ul>
+        </div>
     </div>
+    
+    <script>
+        // Create animated stars
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.innerHTML = '★';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        createStars();
+    </script>
 </body>
 </html>
