@@ -168,7 +168,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -182,7 +183,7 @@
       "obsidian-shellcommands:Shell commands: Custom variables": false
     }
   },
-  "active": "94cf05ca80db436b",
+  "active": "f79d054b6ce972a7",
   "lastOpenFiles": [
     "walt-disney.md",
     "Untitled.md",
