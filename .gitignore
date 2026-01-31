@@ -1,2 +1,8 @@
 # Generated blog HTML files (built by GitHub Actions)
 blog/
+
+# Obsidian workspace files
+.obsidian/
+
+# macOS files
+.DS_Store
