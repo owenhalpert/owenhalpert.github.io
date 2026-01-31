@@ -10,7 +10,7 @@ python3 generate_blog.py
 
 # Add changes
 echo "Adding changes to git..."
-git add posts/ generate_blog.py index.html CLAUDE.md .github/
+git add posts/ static/ generate_blog.py index.html CLAUDE.md .github/
 
 # Check if there are changes to commit
 if git diff --staged --quiet; then
