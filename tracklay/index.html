@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tracklay</title>
+  <meta name="description" content="Overlay the currently playing track on YouTube sets from timestamped comments.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@1,700;1,800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:            #0B0A09;
+      --text:          #EDE9E3;
+      --text-dim:      rgba(237, 233, 227, 0.36);
+      --chrome-blue:   #4589FF;
+      --firefox-orange:#FF7139;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Grain texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    /* Vignette */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background: radial-gradient(ellipse 90% 80% at 50% 50%, transparent 35%, rgba(0,0,0,0.6) 100%);
+    }
+
+    /* ── Main content ─────────────────────────────── */
+    .main {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 18px;
+    }
+
+    .title {
+      font-family: 'Cormorant', serif;
+      font-style: italic;
+      font-weight: 800;
+      font-size: clamp(80px, 11vw, 128px);
+      line-height: 0.88;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      margin-bottom: 26px;
+    }
+
+    .description {
+      font-size: 14.5px;
+      font-weight: 300;
+      color: var(--text-dim);
+      letter-spacing: 0.01em;
+      line-height: 1.55;
+      max-width: 300px;
+      margin-bottom: 40px;
+    }
+
+    /* ── Buttons ──────────────────────────────────── */
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 26px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 20px;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      letter-spacing: 0.01em;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: transform 0.14s ease, box-shadow 0.14s ease, background 0.14s ease;
+      position: relative;
+      z-index: 10;
+    }
+
+    .btn:hover  { transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-chrome {
+      background: transparent;
+      color: rgba(237, 233, 227, 0.3);
+      border-color: rgba(255, 255, 255, 0.07);
+      pointer-events: none;
+      cursor: default;
+    }
+
+    .btn-firefox {
+      background: transparent;
+      color: var(--text);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+    .btn-firefox:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.22);
+    }
+
+    /* Browser-match highlight */
+    .btn.browser-match {
+      box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.55), 0 0 0 4px rgba(255, 255, 255, 0.08);
+      animation: ring-pulse 2.8s ease-in-out infinite;
+    }
+    .btn-firefox.browser-match {
+      box-shadow: 0 0 0 1.5px rgba(255, 113, 57, 0.8), 0 0 0 4px rgba(255, 113, 57, 0.15);
+      animation: ring-pulse-firefox 2.8s ease-in-out infinite;
+    }
+    @keyframes ring-pulse {
+      0%, 100% { box-shadow: 0 0 0 1.5px rgba(255,255,255,0.55), 0 0 0 4px rgba(255,255,255,0.08); }
+      50%       { box-shadow: 0 0 0 1.5px rgba(255,255,255,0.2),  0 0 0 6px rgba(255,255,255,0.03); }
+    }
+    @keyframes ring-pulse-firefox {
+      0%, 100% { box-shadow: 0 0 0 1.5px rgba(255,113,57,0.8),  0 0 0 4px rgba(255,113,57,0.15); }
+      50%       { box-shadow: 0 0 0 1.5px rgba(255,113,57,0.35), 0 0 0 6px rgba(255,113,57,0.05); }
+    }
+
+    /* Browser icons */
+    .icon-chrome, .icon-firefox {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+    .icon-chrome { fill: rgba(237, 233, 227, 0.25); }
+    .icon-firefox { fill: var(--firefox-orange); }
+
+/* ── Tracklay overlay widget ──────────────────── */
+    .tracklay-demo {
+      position: fixed;
+      top: 22px;
+      right: 22px;
+      z-index: 200;
+    }
+
+    .tl-inner {
+      display: flex;
+      align-items: center;
+      background: rgba(8, 8, 8, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 10px;
+      padding: 10px 14px 10px 0;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      box-shadow: 0 4px 28px rgba(0, 0, 0, 0.55);
+      max-width: 360px;
+    }
+
+    .tl-accent {
+      width: 3px;
+      align-self: stretch;
+      min-height: 34px;
+      background: #ff4e45;
+      border-radius: 8px 0 0 8px;
+      flex-shrink: 0;
+    }
+
+    .tl-content {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding-left: 12px;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .tl-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: rgba(255, 255, 255, 0.38);
+      line-height: 1;
+    }
+
+    .tl-track {
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      letter-spacing: 0.01em;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 240px;
+      transition: opacity 0.22s ease;
+    }
+
+    .tl-track.fading { opacity: 0; }
+
+    /* Corner picker dots */
+    .tl-mover {
+      display: flex;
+      flex-wrap: wrap;
+      width: 19px;
+      gap: 3px;
+      margin-left: 14px;
+      flex-shrink: 0;
+    }
+
+    .tl-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.14);
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+
+    .tl-dot:hover { background: rgba(255, 255, 255, 0.5); transform: scale(1.2); }
+    .tl-dot.active { background: rgba(255, 255, 255, 0.88); }
+
+    /* ── Entry animations ─────────────────────────── */
+    .eyebrow     { animation: up 0.65s cubic-bezier(.22,1,.36,1) 0.05s both; }
+    .title       { animation: up 0.75s cubic-bezier(.22,1,.36,1) 0.15s both; }
+    .description { animation: up 0.70s cubic-bezier(.22,1,.36,1) 0.28s both; }
+    .buttons     { animation: up 0.70s cubic-bezier(.22,1,.36,1) 0.40s both; }
+    .meta        { animation: up 0.65s cubic-bezier(.22,1,.36,1) 0.50s both; }
+    .tracklay-demo { animation: fadein 0.9s ease 0.65s both; }
+
+    @keyframes up {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadein {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Live demo overlay -->
+  <div class="tracklay-demo">
+    <div class="tl-inner">
+      <div class="tl-accent"></div>
+      <div class="tl-content">
+        <span class="tl-label">Tracklay</span>
+        <span class="tl-track" id="demo-track">Frankie Knuckles — Your Love</span>
+      </div>
+      <!-- Corner picker: TL, TR (active), BL, BR -->
+      <div class="tl-mover">
+        <div class="tl-dot" data-pos="top-left"></div>
+        <div class="tl-dot active" data-pos="top-right"></div>
+        <div class="tl-dot" data-pos="bottom-left"></div>
+        <div class="tl-dot" data-pos="bottom-right"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="main">
+<h1 class="title">Tracklay</h1>
+    <p class="description">Overlay the currently playing track on YouTube sets from timestamped comments.</p>
+    <div class="buttons">
+      <a href="#" class="btn btn-chrome">
+        <svg class="icon-chrome" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C8.21 0 4.831 1.757 2.632 4.501l3.953 6.848A5.454 5.454 0 0 1 12 6.545h10.691A12 12 0 0 0 12 0zM1.931 5.47A11.943 11.943 0 0 0 0 12c0 6.012 4.42 10.991 10.189 11.864l3.953-6.847a5.45 5.45 0 0 1-6.865-2.29zm13.342 2.166a5.446 5.446 0 0 1 1.45 7.09l.002.001h-.002l-5.344 9.257c.206.01.413.016.621.016 6.627 0 12-5.373 12-12 0-1.54-.29-3.011-.818-4.364zM12 16.364a4.364 4.364 0 1 1 0-8.728 4.364 4.364 0 0 1 0 8.728Z"/></svg>
+        Coming soon
+      </a>
+      <a href="https://addons.mozilla.org/firefox/addon/tracklay/" class="btn btn-firefox">
+        <svg class="icon-firefox" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.452 3.445a11.002 11.002 0 00-2.482-1.908C16.944.997 15.098.093 12.477.032c-.734-.017-1.457.03-2.174.144-.72.114-1.398.292-2.118.56-1.017.377-1.996.975-2.574 1.554.583-.349 1.476-.733 2.55-.992a10.083 10.083 0 013.729-.167c2.341.34 4.178 1.381 5.48 2.625a8.066 8.066 0 011.298 1.587c1.468 2.382 1.33 5.376.184 7.142-.85 1.312-2.67 2.544-4.37 2.53-.583-.023-1.438-.152-2.25-.566-2.629-1.343-3.021-4.688-1.118-6.306-.632-.136-1.82.13-2.646 1.363-.742 1.107-.7 2.816-.242 4.028a6.473 6.473 0 01-.59-1.895 7.695 7.695 0 01.416-3.845A8.212 8.212 0 019.45 5.399c.896-1.069 1.908-1.72 2.75-2.005-.54-.471-1.411-.738-2.421-.767C8.31 2.583 6.327 3.061 4.7 4.41a8.148 8.148 0 00-1.976 2.414c-.455.836-.691 1.659-.697 1.678.122-1.445.704-2.994 1.248-4.055-.79.413-1.827 1.668-2.41 3.042C.095 9.37-.2 11.608.14 13.989c.966 5.668 5.9 9.982 11.843 9.982C18.62 23.971 24 18.591 24 11.956a11.93 11.93 0 00-3.548-8.511z"/></svg>
+        Add to Firefox
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Highlight the button matching the user's browser
+    const ua = navigator.userAgent;
+    const isFirefox = ua.includes('Firefox');
+    const isChrome  = !isFirefox && (ua.includes('Chrome') || ua.includes('Chromium'));
+    if (isFirefox) document.querySelector('.btn-firefox').classList.add('browser-match');
+    else if (isChrome) document.querySelector('.btn-chrome').classList.add('browser-match');
+
+    const tracks = [
+      "Frankie Knuckles — Your Love",
+      "Larry Heard — Can You Feel It",
+      "Ten City — That's the Way Love Is",
+      "Marshall Jefferson — Move Your Body",
+      "Robert Owens — I'll Be Your Friend",
+      "Mr. Fingers — Washing Machine",
+      "Fingers Inc. — Can You Feel It",
+      "Larry Heard — Beyond the Clouds",
+    ];
+
+    // Corner picker
+    const demo = document.querySelector('.tracklay-demo');
+    const positions = {
+      'top-left':     { top: '22px',  right: 'auto', bottom: 'auto', left: '22px'  },
+      'top-right':    { top: '22px',  right: '22px',  bottom: 'auto', left: 'auto' },
+      'bottom-left':  { top: 'auto',  right: 'auto', bottom: '22px', left: '22px'  },
+      'bottom-right': { top: 'auto',  right: '22px',  bottom: '22px', left: 'auto' },
+    };
+
+    document.querySelectorAll('.tl-dot').forEach(dot => {
+      dot.addEventListener('click', () => {
+        const pos = dot.dataset.pos;
+        Object.assign(demo.style, positions[pos]);
+        document.querySelectorAll('.tl-dot').forEach(d => d.classList.remove('active'));
+        dot.classList.add('active');
+      });
+    });
+
+    let idx = 0;
+    const el = document.getElementById('demo-track');
+
+    function cycleTrack() {
+      el.classList.add('fading');
+      setTimeout(() => {
+        idx = (idx + 1) % tracks.length;
+        el.textContent = tracks[idx];
+        el.classList.remove('fading');
+      }, 260);
+    }
+
+    setInterval(cycleTrack, 12000);
+  </script>
+
+</body>
+</html>
