@@ -45,7 +45,16 @@ def add_image_captions(html_content):
     def replace_img(match):
         alt_text = match.group(1)
         src = match.group(2)
-        return f'<figure><img src="{src}" alt="{alt_text}"><figcaption>{alt_text}</figcaption></figure>'
+        webp_src = re.sub(r'\.(png|jpg|jpeg)$', '.webp', src, flags=re.IGNORECASE)
+        return (
+            f'<figure>'
+            f'<picture>'
+            f'<source srcset="{webp_src}" type="image/webp">'
+            f'<img src="{src}" alt="{alt_text}">'
+            f'</picture>'
+            f'<figcaption>{alt_text}</figcaption>'
+            f'</figure>'
+        )
 
     return re.sub(pattern, replace_img, html_content)
 
