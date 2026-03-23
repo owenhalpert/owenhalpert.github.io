@@ -276,7 +276,7 @@
 
         async function update() {
             try {
-                const res = await fetch('https://owenhalpert.vercel.app/api/now-playing');
+                const res = await fetch('https://owenhalpertgithubio.vercel.app/api/now-playing');
                 const data = await res.json();
                 if (data.isPlaying) {
                     el.innerHTML = `<span class="label">Now playing</span><a href="${data.url}" target="_blank" rel="noopener">${data.artist} — ${data.title}</a>`;
