@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 # Deploy blog from Obsidian
 # This script generates the blog locally, commits changes, and pushes to GitHub
 
@@ -10,7 +11,7 @@ python3 generate_blog.py
 
 # Add changes
 echo "Adding changes to git..."
-git add posts/ static/ generate_blog.py index.html CLAUDE.md .github/
+git add posts/ static/ generate_blog.py CLAUDE.md .github/
 
 # Check if there are changes to commit
 if git diff --staged --quiet; then

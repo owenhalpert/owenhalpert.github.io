@@ -16,6 +16,14 @@ except ImportError:
     os.system("pip3 install markdown")
     import markdown
 
+DATE_FORMAT = '%Y-%m-%d'
+
+# Matches <img> with alt/src in either order
+IMG_PATTERN = re.compile(
+    r'<img\s+(?:alt="(?P<alt>[^"]+)"\s+src="(?P<src1>[^"]+)"|src="(?P<src2>[^"]+)"\s+alt="(?P<alt2>[^"]+)")\s*/>',
+)
+WEBP_PATTERN = re.compile(r'\.(png|jpg|jpeg)$', re.IGNORECASE)
+
 
 def parse_frontmatter(content):
     """Extract YAML frontmatter from markdown content."""
@@ -39,13 +47,10 @@ def parse_frontmatter(content):
 
 def add_image_captions(html_content):
     """Convert img tags to figure tags with captions from alt text."""
-    # Pattern to match img tags with alt text
-    pattern = r'<img\s+alt="([^"]+)"\s+src="([^"]+)"\s*/>'
-
     def replace_img(match):
-        alt_text = match.group(1)
-        src = match.group(2)
-        webp_src = re.sub(r'\.(png|jpg|jpeg)$', '.webp', src, flags=re.IGNORECASE)
+        alt_text = match.group('alt') or match.group('alt2')
+        src = match.group('src1') or match.group('src2')
+        webp_src = WEBP_PATTERN.sub('.webp', src)
         return (
             f'<figure>'
             f'<picture>'
@@ -56,7 +61,7 @@ def add_image_captions(html_content):
             f'</figure>'
         )
 
-    return re.sub(pattern, replace_img, html_content)
+    return IMG_PATTERN.sub(replace_img, html_content)
 
 
 def generate_post_html(title, date, content):
@@ -68,71 +73,62 @@ def generate_post_html(title, date, content):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title} - Owen Halpert</title>
     <style>
+        *, *::before, *::after {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{
-            font-family: 'Georgia', serif;
-            margin: 40px auto;
+            font-family: 'Helvetica Neue', Helvetica, 'Segoe UI', Arial, sans-serif;
+            background: #fff;
+            color: #111;
+            font-size: 15px;
             line-height: 1.6;
-            max-width: 67%;
-        }}
-        h1 {{
-            margin-top: 10px;
-            margin-bottom: 10px;
-            font-weight: bold;
-            font-size: 2.0em;
-            text-decoration: underline;
-        }}
-        .date {{
-            color: #666;
-            font-style: italic;
-            margin-bottom: 30px;
+            max-width: 680px;
+            margin: 60px auto;
+            padding: 0 24px;
         }}
         .back-link {{
-            margin-bottom: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 40px;
+            display: block;
         }}
-        a {{
-            color: #0066cc;
-            text-decoration: none;
-            font-size: 1.0em;
+        a {{ color: #111; text-decoration: none; }}
+        a:hover {{ text-decoration: underline; text-underline-offset: 3px; }}
+        h1 {{
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.25;
+            margin-bottom: 6px;
         }}
-        a:hover {{
-            text-decoration: underline;
+        .date {{
+            font-size: 0.75rem;
+            color: #888;
+            font-variant-numeric: tabular-nums;
+            margin-bottom: 36px;
         }}
+        p {{ margin-bottom: 1.2em; }}
         code {{
-            background-color: #f4f4f4;
+            background: #f4f4f4;
             padding: 2px 6px;
             border-radius: 3px;
+            font-size: 0.9em;
         }}
         pre {{
-            background-color: #f4f4f4;
-            padding: 15px;
-            border-radius: 5px;
+            background: #f4f4f4;
+            padding: 16px;
+            border-radius: 4px;
             overflow-x: auto;
+            margin-bottom: 1.2em;
         }}
-        pre code {{
-            background-color: transparent;
-            padding: 0;
-        }}
-        figure {{
-            margin: 30px 0;
-            text-align: center;
-        }}
-        figure img {{
-            max-width: 100%;
-            height: auto;
-        }}
-        figcaption {{
-            color: #666;
-            font-style: italic;
-            font-size: 0.9em;
-            margin-top: 10px;
-            text-align: center;
-        }}
+        pre code {{ background: transparent; padding: 0; }}
+        figure {{ margin: 32px 0; text-align: center; }}
+        figure img {{ max-width: 100%; height: auto; }}
+        figcaption {{ color: #888; font-size: 0.85em; margin-top: 8px; }}
     </style>
 </head>
 <body>
-    <div class="back-link">
-        <a href="/">← Back to home</a>
-    </div>
+    <a class="back-link" href="/">← Owen Halpert</a>
     <h1>{title}</h1>
     <div class="date">{date}</div>
     <div class="content">
@@ -143,105 +139,49 @@ def generate_post_html(title, date, content):
 """
 
 
-def update_index_html(posts):
-    """Update index.html with blog posts list."""
-    index_path = Path("index.html")
-
-    with open(index_path, 'r') as f:
-        html = f.read()
-
-    # Generate blog posts HTML
-    blog_html = ""
-    if posts:
-        blog_html = "\n        <h2>Blog</h2>\n        <ul>\n"
-        for post in posts:
-            blog_html += f'            <li><a href="/blog/{post["slug"]}.html">{post["title"]}</a>\n'
-            blog_html += f'                <div class="project-desc">{post["date"]}</div>\n'
-            blog_html += '            </li>\n'
-        blog_html += "        </ul>"
-
-    # Remove existing blog section if present
-    html = re.sub(r'\s*<h2>Blog</h2>.*?</ul>', '', html, flags=re.DOTALL)
-
-    # Insert blog section before Projects section
-    html = html.replace('        <h2>Projects</h2>', blog_html + '\n        <h2>Projects</h2>')
-
-    with open(index_path, 'w') as f:
-        f.write(html)
-
-
 def main():
     posts_dir = Path("posts")
     blog_dir = Path("blog")
 
-    # Ensure directories exist
     posts_dir.mkdir(exist_ok=True)
     blog_dir.mkdir(exist_ok=True)
 
-    # Process all markdown files
     posts = []
     md = markdown.Markdown(extensions=['fenced_code', 'codehilite'])
 
     for md_file in posts_dir.glob("*.md"):
         print(f"Processing {md_file.name}...")
 
-        # Read markdown file
         with open(md_file, 'r') as f:
             content = f.read()
 
-        # Parse frontmatter
         frontmatter, body = parse_frontmatter(content)
 
         title = frontmatter.get('title', md_file.stem.replace('-', ' ').title())
-        date = frontmatter.get('date', datetime.now().strftime('%Y-%m-%d'))
+        date = frontmatter.get('date', datetime.now().strftime(DATE_FORMAT))
         slug = md_file.stem
 
-        # Convert markdown to HTML
         html_content = md.convert(body)
-        md.reset()  # Reset for next file
+        md.reset()
 
-        # Add captions to images
         html_content = add_image_captions(html_content)
-
-        # Generate full HTML page
         full_html = generate_post_html(title, date, html_content)
 
-        # Write to blog directory
         output_file = blog_dir / f"{slug}.html"
         with open(output_file, 'w') as f:
             f.write(full_html)
 
         print(f"  → Generated {output_file}")
 
-        # Add to posts list
         posts.append({
             'title': title,
             'date': date,
             'slug': slug,
-            'date_obj': datetime.strptime(date, '%Y-%m-%d')
+            'date_obj': datetime.strptime(date, DATE_FORMAT)
         })
 
-    # Sort posts by date (newest first)
     posts.sort(key=lambda x: x['date_obj'], reverse=True)
-
-    # Update index.html
-    if posts:
-        print("\nUpdating index.html...")
-        update_index_html(posts)
-        print(f"✓ Added {len(posts)} blog post(s) to index.html")
-    else:
-        print("\nNo markdown files found in posts/ directory")
-        print("Create a markdown file in posts/ with this format:")
-        print("""
----
-title: My First Post
-date: 2026-01-30
----
-
-Your content here in **markdown**!
-        """)
-
-    print("\n✓ Blog generation complete!")
+    print(f"\n✓ Blog generation complete! ({len(posts)} post(s))")
 
 
 if __name__ == "__main__":
