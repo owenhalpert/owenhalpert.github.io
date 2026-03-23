@@ -184,15 +184,36 @@
             right: 0;
             border-top: 2px solid #111;
             border-left: 2px solid #111;
-            padding: 8px 14px;
             font-size: 0.72rem;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.08em;
             background: #fff;
             display: none;
+            align-items: stretch;
+            overflow: hidden;
+        }
+
+        #now-playing .np-art {
+            width: 56px;
+            flex-shrink: 0;
+            background: #ddd;
+            background-size: cover;
+            background-position: center;
+        }
+
+        #now-playing .np-inner {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 4px;
+            padding: 8px 14px;
+        }
+
+        #now-playing .np-top {
+            display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .np-bars {
@@ -311,18 +332,32 @@
                 const data = await res.json();
                 if (data.isPlaying) {
                     el.innerHTML = '';
+
+                    const art = document.createElement('div');
+                    art.className = 'np-art';
+                    if (data.albumArt) art.style.backgroundImage = `url(${data.albumArt})`;
+
+                    const inner = document.createElement('div');
+                    inner.className = 'np-inner';
+
+                    const top = document.createElement('div');
+                    top.className = 'np-top';
                     const bars = document.createElement('div');
                     bars.className = 'np-bars';
                     bars.append(...Array.from({length: 5}, () => document.createElement('span')));
                     const label = document.createElement('span');
                     label.className = 'label';
                     label.textContent = 'Now playing';
+                    top.append(bars, label);
+
                     const link = document.createElement('a');
                     link.href = data.url;
                     link.target = '_blank';
                     link.rel = 'noopener';
                     link.textContent = `${data.artist} — ${data.title}`;
-                    el.append(bars, label, link);
+
+                    inner.append(top, link);
+                    el.append(art, inner);
                     el.style.display = 'flex';
                 } else {
                     el.style.display = 'none';
