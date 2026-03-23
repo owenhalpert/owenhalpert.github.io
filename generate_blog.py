@@ -7,6 +7,7 @@ Usage: python3 generate_blog.py
 import os
 import re
 from datetime import datetime
+from html import escape
 from pathlib import Path
 
 try:
@@ -71,7 +72,7 @@ def generate_post_html(title, date, content):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{title} - Owen Halpert</title>
+    <title>{escape(title)} - Owen Halpert</title>
     <style>
         *, *::before, *::after {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{
@@ -129,8 +130,8 @@ def generate_post_html(title, date, content):
 </head>
 <body>
     <a class="back-link" href="/">← Owen Halpert</a>
-    <h1>{title}</h1>
-    <div class="date">{date}</div>
+    <h1>{escape(title)}</h1>
+    <div class="date">{escape(date)}</div>
     <div class="content">
         {content}
     </div>

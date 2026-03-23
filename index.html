@@ -287,7 +287,19 @@
                 const res = await fetch('https://owenhalpertgithubio.vercel.app/api/now-playing');
                 const data = await res.json();
                 if (data.isPlaying) {
-                    el.innerHTML = `<img src="/static/images/spotify.png" alt="Spotify"><span class="label">Now playing</span><a href="${data.url}" target="_blank" rel="noopener">${data.artist} — ${data.title}</a>`;
+                    el.innerHTML = '';
+                    const img = document.createElement('img');
+                    img.src = '/static/images/spotify.png';
+                    img.alt = 'Spotify';
+                    const label = document.createElement('span');
+                    label.className = 'label';
+                    label.textContent = 'Now playing';
+                    const link = document.createElement('a');
+                    link.href = data.url;
+                    link.target = '_blank';
+                    link.rel = 'noopener';
+                    link.textContent = `${data.artist} — ${data.title}`;
+                    el.append(img, label, link);
                     el.style.display = 'flex';
                 } else {
                     el.style.display = 'none';
