@@ -43,6 +43,5 @@ export default async function handler(req, res) {
     title: song.item.name,
     artist: song.item.artists.map(a => a.name).join(', '),
     url: song.item.external_urls.spotify,
-    albumArt: song.item.album.images[1]?.url ?? song.item.album.images[0]?.url,
   });
 }

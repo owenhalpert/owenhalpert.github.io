@@ -188,18 +188,19 @@
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            background: #fff;
             display: none;
             align-items: stretch;
             overflow: hidden;
+            background: linear-gradient(270deg, #fff, #fde8f0, #e8f0fd, #e8fdf0, #fff);
+            background-size: 400% 100%;
+            animation: np-gradient 8s ease infinite;
         }
 
-        #now-playing .np-art {
-            width: 56px;
-            flex-shrink: 0;
-            background: #ddd;
-            background-size: cover;
-            background-position: center;
+        @keyframes np-gradient {
+            0%   { background-position: 0% 50%; }
+            33%  { background-position: 50% 50%; }
+            66%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         #now-playing .np-inner {
@@ -333,10 +334,6 @@
                 if (data.isPlaying) {
                     el.innerHTML = '';
 
-                    const art = document.createElement('div');
-                    art.className = 'np-art';
-                    if (data.albumArt) art.style.backgroundImage = `url(${data.albumArt})`;
-
                     const inner = document.createElement('div');
                     inner.className = 'np-inner';
 
@@ -357,7 +354,7 @@
                     link.textContent = `${data.artist} — ${data.title}`;
 
                     inner.append(top, link);
-                    el.append(art, inner);
+                    el.append(inner);
                     el.style.display = 'flex';
                 } else {
                     el.style.display = 'none';
