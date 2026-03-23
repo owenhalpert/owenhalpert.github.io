@@ -1,0 +1,16 @@
+{
+  "functions": {
+    "api/now-playing.js": {
+      "memory": 128,
+      "maxDuration": 5
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "https://owenhalpert.com" }
+      ]
+    }
+  ]
+}
