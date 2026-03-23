@@ -19,7 +19,7 @@ import os
 
 CLIENT_ID = input("Enter your Spotify Client ID: ").strip()
 CLIENT_SECRET = input("Enter your Spotify Client Secret: ").strip()
-REDIRECT_URI = "http://localhost:8888/callback"
+REDIRECT_URI = "http://127.0.0.1:8888/callback"
 SCOPE = "user-read-currently-playing user-read-playback-state"
 
 auth_url = (
