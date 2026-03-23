@@ -188,6 +188,14 @@
             letter-spacing: 0.08em;
             background: #fff;
             display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #now-playing img {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
         }
 
         #now-playing a {
@@ -279,8 +287,8 @@
                 const res = await fetch('https://owenhalpertgithubio.vercel.app/api/now-playing');
                 const data = await res.json();
                 if (data.isPlaying) {
-                    el.innerHTML = `<span class="label">Now playing</span><a href="${data.url}" target="_blank" rel="noopener">${data.artist} — ${data.title}</a>`;
-                    el.style.display = 'block';
+                    el.innerHTML = `<img src="/static/images/spotify.png" alt="Spotify"><span class="label">Now playing</span><a href="${data.url}" target="_blank" rel="noopener">${data.artist} — ${data.title}</a>`;
+                    el.style.display = 'flex';
                 } else {
                     el.style.display = 'none';
                 }
