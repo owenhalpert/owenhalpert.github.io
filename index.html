@@ -137,9 +137,6 @@
         }
 
         @media (max-width: 640px) {
-            .headshot {
-                width: 64px;
-            }
             .grid {
                 grid-template-columns: 1fr;
             }
@@ -148,22 +145,27 @@
                 height: auto;
                 border-right: none;
                 border-bottom: 2px solid #111;
-                padding: 28px 20px;
-                flex-direction: row;
-                align-items: baseline;
-                flex-wrap: wrap;
-                gap: 8px 20px;
+                padding: 20px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
             }
+            .sidebar-top {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+            }
+            .headshot {
+                width: 56px;
+                margin-bottom: 0;
+            }
+            h1 br { display: none; }
+            h1 { margin-bottom: 0; }
+            .wave { margin-bottom: 0; display: inline; margin-left: 6px; }
             .sidebar nav {
                 flex-direction: row;
                 margin-top: 0;
                 gap: 12px;
-            }
-            h1 {
-                margin-bottom: 0;
-            }
-            .wave {
-                margin-bottom: 0;
             }
             .section-header {
                 padding: 10px 20px;
@@ -271,9 +273,10 @@
 <body>
     <div class="grid">
         <div class="sidebar">
-            <img src="static/images/headshot-halftone.svg" alt="Owen Halpert" class="headshot">
-            <h1>Owen<br>Halpert</h1>
-            <span class="wave">👋</span>
+            <div class="sidebar-top">
+                <img src="static/images/headshot-halftone.svg" alt="Owen Halpert" class="headshot">
+                <div><h1>Owen<br>Halpert</h1><span class="wave">👋</span></div>
+            </div>
             <nav>
                 <a href="https://github.com/owenhalpert">GitHub</a>
                 <a href="https://www.linkedin.com/in/halpert/">LinkedIn</a>
