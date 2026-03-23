@@ -19,7 +19,7 @@ async function getAccessToken() {
 }
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', 'https://owenhalpert.github.io');
+  res.setHeader('Access-Control-Allow-Origin', 'https://owenhalpert.com');
   res.setHeader('Cache-Control', 's-maxage=30');
 
   const access_token = await getAccessToken();
