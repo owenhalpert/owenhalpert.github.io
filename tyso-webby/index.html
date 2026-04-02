@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TYSO Webby Watch</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Helvetica Neue', Helvetica, 'Segoe UI', Arial, sans-serif;
+      background: #fff;
+      color: #111;
+      font-size: 15px;
+      line-height: 1.45;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    header {
+      border-bottom: 2px solid #111;
+      padding-bottom: 18px;
+      margin-bottom: 36px;
+    }
+
+    h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 0.78rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .category {
+      margin-bottom: 48px;
+    }
+
+    .category-header {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #555;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .total-votes {
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: #aaa;
+      letter-spacing: 0.04em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .entry {
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .entry:last-child { border-bottom: none; }
+
+    .entry-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 7px;
+      gap: 12px;
+    }
+
+    .entry-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .entry-stat {
+      font-size: 0.78rem;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      color: #888;
+      flex-shrink: 0;
+    }
+
+    .bar-track {
+      height: 4px;
+      background: #eee;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: #111;
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+
+    /* Highlighted entry — our horse */
+    .entry.highlight .entry-title {
+      color: #000;
+    }
+
+    .entry.highlight .bar-fill {
+      background: #d62828;
+    }
+
+    .entry.highlight .entry-stat {
+      color: #d62828;
+      font-weight: 700;
+    }
+
+    .highlight-badge {
+      display: inline-block;
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: #d62828;
+      color: #fff;
+      padding: 1px 5px;
+      border-radius: 3px;
+      margin-left: 6px;
+      vertical-align: middle;
+      position: relative;
+      top: -1px;
+    }
+
+    .rank {
+      font-size: 0.7rem;
+      color: #bbb;
+      font-variant-numeric: tabular-nums;
+      margin-right: 6px;
+    }
+
+    footer {
+      margin-top: 48px;
+      font-size: 0.72rem;
+      color: #bbb;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-top: 1px solid #eee;
+      padding-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    footer a {
+      color: #888;
+      text-decoration: none;
+    }
+    footer a:hover { text-decoration: underline; }
+
+    #status {
+      font-size: 0.75rem;
+      color: #bbb;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 32px;
+    }
+
+    .error-msg {
+      font-size: 0.85rem;
+      color: #888;
+      padding: 24px 0;
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 28px 16px 60px; }
+      .entry-top { flex-direction: column; gap: 2px; }
+      .entry-stat { align-self: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>TYSO Webby Watch</h1>
+  <div class="subtitle">2026 Webby Awards — Live Vote Tracker</div>
+</header>
+
+<div id="status">Loading...</div>
+<div id="dashboard"></div>
+
+<footer>
+  <span>Updates every 30 min</span>
+  <a href="https://vote.webbyawards.com" target="_blank" rel="noopener">Vote on Webby Awards ↗</a>
+</footer>
+
+<script>
+  // Keywords that identify the entries we're rooting for.
+  // Case-insensitive substring match against the entry title.
+  const HIGHLIGHT_KEYWORDS = ['paul rudd', 'tyso', 'take your shoes off'];
+
+  function isHighlight(title) {
+    const lower = title.toLowerCase();
+    return HIGHLIGHT_KEYWORDS.some(k => lower.includes(k));
+  }
+
+  function fmt(n) {
+    return Number(n).toLocaleString();
+  }
+
+  function renderCategory(cat) {
+    const maxVotes = cat.entries[0]?.votes || 1;
+
+    const rows = cat.entries.map((e, i) => {
+      const hl = isHighlight(e.title);
+      const barWidth = ((e.votes / maxVotes) * 100).toFixed(1);
+      const badge = hl ? '<span class="highlight-badge">Our pick</span>' : '';
+      return `
+        <div class="entry${hl ? ' highlight' : ''}">
+          <div class="entry-top">
+            <div class="entry-title">
+              <span class="rank">${i + 1}.</span>${e.title}${badge}
+            </div>
+            <div class="entry-stat">${fmt(e.votes)} (${e.pct}%)</div>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:${barWidth}%"></div>
+          </div>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="category">
+        <div class="category-header">
+          <span>${cat.name}</span>
+          <span class="total-votes">${fmt(cat.total)} total votes</span>
+        </div>
+        ${rows}
+      </div>`;
+  }
+
+  function renderUpdated(iso) {
+    try {
+      const d = new Date(iso);
+      const now = new Date();
+      const diffMin = Math.round((now - d) / 60000);
+      const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const dateStr = d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+      const ago = diffMin < 2 ? 'just now'
+                : diffMin < 60 ? `${diffMin}m ago`
+                : `${Math.round(diffMin / 60)}h ago`;
+      return `Last updated ${dateStr} at ${timeStr} (${ago})`;
+    } catch (_) {
+      return `Last updated ${iso}`;
+    }
+  }
+
+  async function load() {
+    const status = document.getElementById('status');
+    const dashboard = document.getElementById('dashboard');
+    try {
+      const res = await fetch('data.json?_=' + Date.now());
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      status.textContent = renderUpdated(data.updated);
+      dashboard.innerHTML = data.categories.map(renderCategory).join('');
+    } catch (e) {
+      status.textContent = 'Could not load data.';
+      dashboard.innerHTML = '<p class="error-msg">Vote data hasn\'t been scraped yet, or something went wrong. Check back soon.</p>';
+    }
+  }
+
+  load();
+  // Refresh every 30 minutes in case the tab is left open
+  setInterval(load, 30 * 60 * 1000);
+</script>
+</body>
+</html>
