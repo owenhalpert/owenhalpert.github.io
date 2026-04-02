@@ -81,8 +81,34 @@ if not categories:
 
 out_dir = os.path.join(os.path.dirname(__file__), "tyso-webby")
 os.makedirs(out_dir, exist_ok=True)
+
+now = datetime.now(timezone.utc).isoformat()
+
+# Current snapshot
 out_path = os.path.join(out_dir, "data.json")
 with open(out_path, "w") as f:
-    json.dump({"updated": datetime.now(timezone.utc).isoformat(), "categories": categories}, f, indent=2)
-
+    json.dump({"updated": now, "categories": categories}, f, indent=2)
 print(f"Written to {out_path}")
+
+# Historical log — one entry per scrape, appended indefinitely
+history_path = os.path.join(out_dir, "history.json")
+if os.path.exists(history_path):
+    with open(history_path) as f:
+        history = json.load(f)
+else:
+    history = []
+
+history.append({
+    "t": now,
+    "categories": [
+        {
+            "name": cat["name"],
+            "entries": [{"title": e["title"], "votes": e["votes"]} for e in cat["entries"]],
+        }
+        for cat in categories
+    ],
+})
+
+with open(history_path, "w") as f:
+    json.dump(history, f, separators=(",", ":"))
+print(f"History: {len(history)} snapshots → {history_path}")
