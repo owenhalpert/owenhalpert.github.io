@@ -48,32 +48,52 @@
       letter-spacing: 0.08em;
     }
 
-    /* Card wrapping both categories */
+    /* Dashboard shell */
     #dashboard {
       flex: 1;
       border: 1.5px solid #ddd;
       border-radius: 12px;
       overflow: hidden;
-      display: flex;
       min-height: 0;
+      background: #fff;
+      max-height: calc(100vh - 150px);
     }
 
-    .categories-grid {
+    .dashboard-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
       width: 100%;
+      height: 100%;
     }
 
-    .category {
-      padding: 20px 22px;
+    .panel {
+      padding: 18px 20px;
       display: flex;
       flex-direction: column;
       min-height: 0;
       overflow: hidden;
+      background: #fff;
     }
 
-    .category + .category {
+    .panel:nth-child(even) {
       border-left: 1.5px solid #ddd;
+    }
+
+    .panel:nth-child(-n + 2) {
+      border-bottom: 1.5px solid #ddd;
+    }
+
+    .panel:nth-child(odd) {
+      border-left: none;
+    }
+
+    .summary-panel {
+      justify-content: flex-start;
+    }
+
+    .trend-panel {
+      justify-content: space-between;
     }
 
     .category-header {
@@ -91,6 +111,15 @@
       flex-shrink: 0;
     }
 
+    .panel-kicker {
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #b9b9b9;
+      margin-bottom: 10px;
+    }
+
     .total-votes {
       font-size: 0.68rem;
       font-weight: 400;
@@ -104,13 +133,13 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+      min-height: 0;
     }
 
     .entry {
       padding: 10px 12px;
       border: 1px solid #f0f0f0;
       border-radius: 8px;
-      flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -173,6 +202,66 @@
       font-weight: 700;
     }
 
+    /* Trend chart */
+    .trend-chart {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .trend-label {
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #bbb;
+      margin-bottom: 8px;
+    }
+
+    .trend-focus {
+      font-size: 0.8rem;
+      color: #707070;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .trend-focus strong {
+      color: #111;
+      font-weight: 600;
+    }
+
+    .trend-svg {
+      width: 100%;
+      height: 100%;
+      min-height: 150px;
+      display: block;
+      overflow: visible;
+    }
+
+    .trend-chart-wrap {
+      flex: 1;
+      min-height: 0;
+      border: 1px solid #f3f3f3;
+      border-radius: 10px;
+      padding: 10px 10px 6px;
+      background: linear-gradient(180deg, #fff 0%, #fdfdf7 100%);
+    }
+
+    .trend-chart-host {
+      height: 100%;
+      min-height: 132px;
+    }
+
+    @keyframes blink-pulse {
+      0%, 100% { opacity: 1; r: 3.5; }
+      50% { opacity: 0.25; r: 5; }
+    }
+
+    .live-dot {
+      animation: blink-pulse 1.4s ease-in-out infinite;
+    }
+
     footer {
       margin-top: 14px;
       font-size: 0.7rem;
@@ -199,8 +288,24 @@
 
     @media (max-width: 600px) {
       body { padding: 20px 16px 16px; }
-      .categories-grid { grid-template-columns: 1fr; }
-      .category + .category { border-left: none; border-top: 1.5px solid #ddd; }
+      #dashboard {
+        max-height: none;
+      }
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, minmax(0, auto));
+        height: auto;
+      }
+      .panel {
+        border-left: none !important;
+        border-bottom: 1.5px solid #ddd;
+      }
+      .panel:last-child {
+        border-bottom: none;
+      }
+      .trend-svg {
+        min-height: 160px;
+      }
     }
   </style>
 </head>
@@ -218,8 +323,13 @@
   <a href="https://vote.webbyawards.com" target="_blank" rel="noopener">Vote on Webby Awards ↗</a>
 </footer>
 
-<script>
+<script type="module">
+  import React from 'https://esm.sh/react@19.2.0';
+  import { createRoot } from 'https://esm.sh/react-dom@19.2.0/client';
+  import { Liveline } from 'https://esm.sh/liveline@0.0.7?deps=react@19.2.0';
+
   const HIGHLIGHT_KEYWORDS = ['paul rudd', 'tyso', 'take your shoes off'];
+  const chartRoots = new Map();
 
   function isHighlight(title) {
     const lower = title.toLowerCase();
@@ -230,7 +340,109 @@
     return Number(n).toLocaleString();
   }
 
-  function renderCategory(cat) {
+  // Build per-entry time series from history for a given category name
+  function buildSeries(history, categoryName) {
+    const series = {}; // title -> [{t, votes}]
+    for (const snap of history) {
+      const cat = snap.categories.find(c => c.name === categoryName);
+      if (!cat) continue;
+      for (const entry of cat.entries) {
+        if (!series[entry.title]) series[entry.title] = [];
+        series[entry.title].push({ t: new Date(snap.t), votes: entry.votes });
+      }
+    }
+    return series;
+  }
+
+  function clearChartRoots() {
+    for (const root of chartRoots.values()) {
+      root.unmount();
+    }
+    chartRoots.clear();
+  }
+
+  function getTrendDirection(points) {
+    if (!points || points.length < 2) return 'flat';
+    const last = points[points.length - 1].votes;
+    const prev = points[points.length - 2].votes;
+    if (last > prev) return 'up';
+    if (last < prev) return 'down';
+    return 'flat';
+  }
+
+  function getTrendWindowSecs(points) {
+    const times = points.map(point => point.time);
+    if (times.length < 2) return 3600;
+    const spanSecs = Math.ceil(Math.max(...times) - Math.min(...times));
+    return Math.max(spanSecs, 1800);
+  }
+
+  function getFeaturedEntry(cat) {
+    return cat.entries.find(entry => isHighlight(entry.title)) || cat.entries[0] || null;
+  }
+
+  function buildLivelineData(points) {
+    return points.map(point => ({
+      time: Math.floor(point.t.getTime() / 1000),
+      value: point.votes
+    }));
+  }
+
+  function renderTrendChartHost(catName, focusTitle) {
+    return `
+      <div class="trend-chart">
+        <div class="trend-focus"><strong>${focusTitle}</strong></div>
+        <div class="trend-chart-wrap">
+          <div class="trend-chart-host" data-chart-for="${catName}"></div>
+        </div>
+      </div>`;
+  }
+
+  function mountTrendCharts(categories, history) {
+    clearChartRoots();
+
+    for (const cat of categories) {
+      const host = document.querySelector(`[data-chart-for="${CSS.escape(cat.name)}"]`);
+      if (!host) continue;
+
+      const seriesMap = history ? buildSeries(history, cat.name) : {};
+      const featuredEntry = getFeaturedEntry(cat);
+      if (!featuredEntry) continue;
+
+      const featuredPoints = (seriesMap[featuredEntry.title] || [])
+        .slice()
+        .sort((a, b) => a.t - b.t);
+      if (featuredPoints.length === 0) continue;
+
+      const lineData = buildLivelineData(featuredPoints);
+      const trendDirection = getTrendDirection(featuredPoints);
+      const root = createRoot(host);
+      chartRoots.set(cat.name, root);
+      root.render(
+        React.createElement(Liveline, {
+          data: lineData,
+          value: featuredPoints[featuredPoints.length - 1]?.votes ?? featuredEntry.votes,
+          theme: 'light',
+          color: '#b5c400',
+          fill: true,
+          grid: true,
+          badge: true,
+          pulse: true,
+          scrub: true,
+          momentum: trendDirection,
+          exaggerate: true,
+          lineWidth: 3,
+          window: getTrendWindowSecs(lineData),
+          windowStyle: 'text',
+          formatValue: v => `${Math.round(v).toLocaleString()} votes`,
+          padding: { top: 12, right: 90, bottom: 28, left: 12 },
+          style: { height: '100%', width: '100%' }
+        })
+      );
+    }
+  }
+
+  function renderCategoryPanel(cat) {
     const maxVotes = cat.entries[0]?.votes || 1;
 
     const rows = cat.entries.map((e, i) => {
@@ -249,12 +461,24 @@
     }).join('');
 
     return `
-      <div class="category">
+      <div class="panel summary-panel">
+        <div class="panel-kicker">Standings</div>
         <div class="category-header">
           <a href="${cat.url}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">${cat.name}</a>
           <span class="total-votes">${fmt(cat.total)} votes</span>
         </div>
         <div class="entries">${rows}</div>
+      </div>`;
+  }
+
+  function renderTrendPanel(cat, history) {
+    const featuredEntry = getFeaturedEntry(cat);
+    return `
+      <div class="panel trend-panel">
+        <div class="category-header">
+          <a href="${cat.url}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">${cat.name}</a>
+        </div>
+        ${history && featuredEntry ? renderTrendChartHost(cat.name, featuredEntry.title) : '<p class="error-msg" style="padding:0;color:#999;">Trend history will appear once more snapshots land.</p>'}
       </div>`;
   }
 
@@ -274,12 +498,21 @@
     const status = document.getElementById('status');
     const dashboard = document.getElementById('dashboard');
     try {
-      const res = await fetch('data.json?_=' + Date.now());
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
+      const [dataRes, histRes] = await Promise.all([
+        fetch('data.json?_=' + Date.now()),
+        fetch('history.json?_=' + Date.now())
+      ]);
+      if (!dataRes.ok) throw new Error(`HTTP ${dataRes.status}`);
+      const data = await dataRes.json();
+      const history = histRes.ok ? await histRes.json() : null;
+
       status.textContent = renderUpdated(data.updated);
-      dashboard.innerHTML = `<div class="categories-grid">${data.categories.map(renderCategory).join('')}</div>`;
+      const summaryPanels = data.categories.map(c => renderCategoryPanel(c)).join('');
+      const trendPanels = data.categories.map(c => renderTrendPanel(c, history)).join('');
+      dashboard.innerHTML = `<div class="dashboard-grid">${summaryPanels}${trendPanels}</div>`;
+      if (history) mountTrendCharts(data.categories, history);
     } catch (e) {
+      clearChartRoots();
       status.textContent = 'Could not load data.';
       dashboard.innerHTML = '<p class="error-msg">Vote data hasn\'t been scraped yet. Check back soon.</p>';
     }
