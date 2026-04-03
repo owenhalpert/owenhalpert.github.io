@@ -287,24 +287,39 @@
     }
 
     @media (max-width: 600px) {
-      body { padding: 20px 16px 16px; }
+      html, body {
+        height: auto;
+      }
+      body {
+        padding: 20px 16px 16px;
+        min-height: 100vh;
+      }
       #dashboard {
         max-height: none;
+        overflow: visible;
       }
       .dashboard-grid {
         grid-template-columns: 1fr;
-        grid-template-rows: repeat(4, minmax(0, auto));
+        grid-template-rows: repeat(4, auto);
         height: auto;
       }
       .panel {
         border-left: none !important;
         border-bottom: 1.5px solid #ddd;
+        overflow: visible;
+        height: auto;
       }
       .panel:last-child {
         border-bottom: none;
       }
+      .entries {
+        overflow: visible;
+      }
       .trend-svg {
         min-height: 160px;
+      }
+      .trend-chart-host {
+        min-height: 180px;
       }
     }
   </style>
