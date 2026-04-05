@@ -1,35 +1,35 @@
 {
-  "updated": "2026-04-05T07:57:38.128453+00:00",
+  "updated": "2026-04-05T08:56:27.661825+00:00",
   "categories": [
     {
       "name": "Best Video Podcast Host",
       "url": "https://vote.webbyawards.com/PublicVoting#/2026/podcasts/features/best-video-podcast-host",
-      "total": 7418,
+      "total": 7458,
       "entries": [
         {
           "title": "The Don Lemon Show",
-          "votes": 3742,
+          "votes": 3760,
           "pct": "50.4"
         },
         {
           "title": "This Is Gavin Newsom",
-          "votes": 1445,
+          "votes": 1452,
           "pct": "19.5"
         },
         {
           "title": "In the Test Kitchen",
-          "votes": 958,
+          "votes": 962,
           "pct": "12.9"
         },
         {
           "title": "Take Your Shoes Off",
-          "votes": 921,
+          "votes": 927,
           "pct": "12.4"
         },
         {
           "title": "Seen on the Screen with Jacqueline Coley",
-          "votes": 352,
-          "pct": "4.7"
+          "votes": 357,
+          "pct": "4.8"
         }
       ]
     },
