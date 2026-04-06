@@ -1,29 +1,29 @@
 {
-  "updated": "2026-04-06T09:18:49.309390+00:00",
+  "updated": "2026-04-06T10:39:18.312402+00:00",
   "categories": [
     {
       "name": "Best Video Podcast Host",
       "url": "https://vote.webbyawards.com/PublicVoting#/2026/podcasts/features/best-video-podcast-host",
-      "total": 7947,
+      "total": 7960,
       "entries": [
         {
           "title": "The Don Lemon Show",
-          "votes": 3962,
-          "pct": "49.9"
+          "votes": 3967,
+          "pct": "49.8"
         },
         {
           "title": "This Is Gavin Newsom",
-          "votes": 1584,
-          "pct": "19.9"
+          "votes": 1589,
+          "pct": "20.0"
         },
         {
           "title": "In the Test Kitchen",
-          "votes": 1039,
+          "votes": 1041,
           "pct": "13.1"
         },
         {
           "title": "Take Your Shoes Off",
-          "votes": 980,
+          "votes": 981,
           "pct": "12.3"
         },
         {
@@ -36,31 +36,31 @@
     {
       "name": "Comedy",
       "url": "https://vote.webbyawards.com/PublicVoting#/2026/podcasts/individual-episode/comedy",
-      "total": 3195,
+      "total": 3202,
       "entries": [
         {
           "title": "Paul Rudd 3.0 on TYSO",
-          "votes": 1425,
-          "pct": "44.6"
+          "votes": 1426,
+          "pct": "44.5"
         },
         {
           "title": "When The Cops Say No, We Say Yes",
-          "votes": 661,
+          "votes": 664,
           "pct": "20.7"
         },
         {
           "title": "The Nightly",
           "votes": 427,
-          "pct": "13.4"
+          "pct": "13.3"
         },
         {
           "title": "On Par with Maury Povich Podcast/Kathy Griffin Talks About Being  The Most Hated Woman In America in 1-On-1 Interview With Maury",
-          "votes": 364,
+          "votes": 365,
           "pct": "11.4"
         },
         {
           "title": "Wisecrack",
-          "votes": 318,
+          "votes": 320,
           "pct": "10.0"
         }
       ]
