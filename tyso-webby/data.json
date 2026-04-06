@@ -1,34 +1,34 @@
 {
-  "updated": "2026-04-06T11:53:33.094039+00:00",
+  "updated": "2026-04-06T13:26:20.524858+00:00",
   "categories": [
     {
       "name": "Best Video Podcast Host",
       "url": "https://vote.webbyawards.com/PublicVoting#/2026/podcasts/features/best-video-podcast-host",
-      "total": 7960,
+      "total": 7977,
       "entries": [
         {
           "title": "The Don Lemon Show",
-          "votes": 3967,
+          "votes": 3973,
           "pct": "49.8"
         },
         {
           "title": "This Is Gavin Newsom",
-          "votes": 1589,
+          "votes": 1595,
           "pct": "20.0"
         },
         {
           "title": "In the Test Kitchen",
-          "votes": 1041,
+          "votes": 1042,
           "pct": "13.1"
         },
         {
           "title": "Take Your Shoes Off",
-          "votes": 981,
+          "votes": 984,
           "pct": "12.3"
         },
         {
           "title": "Seen on the Screen with Jacqueline Coley",
-          "votes": 382,
+          "votes": 383,
           "pct": "4.8"
         }
       ]
@@ -36,32 +36,32 @@
     {
       "name": "Comedy",
       "url": "https://vote.webbyawards.com/PublicVoting#/2026/podcasts/individual-episode/comedy",
-      "total": 3206,
+      "total": 3217,
       "entries": [
         {
           "title": "Paul Rudd 3.0 on TYSO",
-          "votes": 1427,
+          "votes": 1431,
           "pct": "44.5"
         },
         {
           "title": "When The Cops Say No, We Say Yes",
-          "votes": 665,
+          "votes": 666,
           "pct": "20.7"
         },
         {
           "title": "The Nightly",
-          "votes": 428,
+          "votes": 429,
           "pct": "13.3"
         },
         {
           "title": "On Par with Maury Povich Podcast/Kathy Griffin Talks About Being  The Most Hated Woman In America in 1-On-1 Interview With Maury",
           "votes": 365,
-          "pct": "11.4"
+          "pct": "11.3"
         },
         {
           "title": "Wisecrack",
-          "votes": 321,
-          "pct": "10.0"
+          "votes": 326,
+          "pct": "10.1"
         }
       ]
     }
