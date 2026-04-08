@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-08T08:17:12.731544+00:00",
+  "updated": "2026-04-08T09:46:15.643836+00:00",
   "categories": [
     {
       "name": "Best Video Podcast Host",
@@ -36,21 +36,21 @@
     {
       "name": "Comedy",
       "url": "https://vote.webbyawards.com/PublicVoting#/2026/podcasts/individual-episode/comedy",
-      "total": 3951,
+      "total": 3962,
       "entries": [
         {
           "title": "Paul Rudd 3.0 on TYSO",
-          "votes": 1733,
+          "votes": 1739,
           "pct": "43.9"
         },
         {
           "title": "When The Cops Say No, We Say Yes",
-          "votes": 819,
+          "votes": 821,
           "pct": "20.7"
         },
         {
           "title": "The Nightly",
-          "votes": 549,
+          "votes": 551,
           "pct": "13.9"
         },
         {
@@ -60,7 +60,7 @@
         },
         {
           "title": "Wisecrack",
-          "votes": 411,
+          "votes": 412,
           "pct": "10.4"
         }
       ]
