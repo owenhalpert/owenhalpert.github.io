@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-09T07:49:24.449484+00:00",
+  "updated": "2026-04-09T09:19:14.059900+00:00",
   "categories": [
     {
       "name": "Best Video Podcast Host",
@@ -36,22 +36,22 @@
     {
       "name": "Comedy",
       "url": "https://vote.webbyawards.com/PublicVoting#/2026/podcasts/individual-episode/comedy",
-      "total": 4271,
+      "total": 4293,
       "entries": [
         {
           "title": "Paul Rudd 3.0 on TYSO",
-          "votes": 1893,
+          "votes": 1903,
           "pct": "44.3"
         },
         {
           "title": "When The Cops Say No, We Say Yes",
-          "votes": 882,
+          "votes": 889,
           "pct": "20.7"
         },
         {
           "title": "The Nightly",
-          "votes": 587,
-          "pct": "13.7"
+          "votes": 591,
+          "pct": "13.8"
         },
         {
           "title": "On Par with Maury Povich Podcast/Kathy Griffin Talks About Being  The Most Hated Woman In America in 1-On-1 Interview With Maury",
@@ -60,8 +60,8 @@
         },
         {
           "title": "Wisecrack",
-          "votes": 443,
-          "pct": "10.4"
+          "votes": 444,
+          "pct": "10.3"
         }
       ]
     }
