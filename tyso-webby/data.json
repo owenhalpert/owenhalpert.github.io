@@ -1,29 +1,29 @@
 {
-  "updated": "2026-04-12T03:32:30.201993+00:00",
+  "updated": "2026-04-12T05:58:54.025746+00:00",
   "categories": [
     {
       "name": "Best Video Podcast Host",
       "url": "https://vote.webbyawards.com/PublicVoting#/2026/podcasts/features/best-video-podcast-host",
-      "total": 12531,
+      "total": 12557,
       "entries": [
         {
           "title": "The Don Lemon Show",
-          "votes": 6093,
+          "votes": 6103,
           "pct": "48.6"
         },
         {
           "title": "This Is Gavin Newsom",
-          "votes": 2483,
+          "votes": 2488,
           "pct": "19.8"
         },
         {
           "title": "In the Test Kitchen",
-          "votes": 1732,
+          "votes": 1739,
           "pct": "13.8"
         },
         {
           "title": "Take Your Shoes Off",
-          "votes": 1624,
+          "votes": 1628,
           "pct": "13.0"
         },
         {
@@ -36,21 +36,21 @@
     {
       "name": "Comedy",
       "url": "https://vote.webbyawards.com/PublicVoting#/2026/podcasts/individual-episode/comedy",
-      "total": 5214,
+      "total": 5233,
       "entries": [
         {
           "title": "Paul Rudd 3.0 on TYSO",
-          "votes": 2289,
+          "votes": 2296,
           "pct": "43.9"
         },
         {
           "title": "When The Cops Say No, We Say Yes",
-          "votes": 1076,
-          "pct": "20.6"
+          "votes": 1082,
+          "pct": "20.7"
         },
         {
           "title": "The Nightly",
-          "votes": 724,
+          "votes": 728,
           "pct": "13.9"
         },
         {
@@ -60,7 +60,7 @@
         },
         {
           "title": "Wisecrack",
-          "votes": 536,
+          "votes": 538,
           "pct": "10.3"
         }
       ]
