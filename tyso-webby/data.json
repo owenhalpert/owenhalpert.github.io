@@ -1,34 +1,34 @@
 {
-  "updated": "2026-04-13T08:31:08.806475+00:00",
+  "updated": "2026-04-13T10:52:42.955754+00:00",
   "categories": [
     {
       "name": "Best Video Podcast Host",
       "url": "https://vote.webbyawards.com/PublicVoting#/2026/podcasts/features/best-video-podcast-host",
-      "total": 13168,
+      "total": 13210,
       "entries": [
         {
           "title": "The Don Lemon Show",
-          "votes": 6304,
-          "pct": "47.9"
+          "votes": 6316,
+          "pct": "47.8"
         },
         {
           "title": "This Is Gavin Newsom",
-          "votes": 2607,
+          "votes": 2618,
           "pct": "19.8"
         },
         {
           "title": "In the Test Kitchen",
-          "votes": 1845,
+          "votes": 1854,
           "pct": "14.0"
         },
         {
           "title": "Take Your Shoes Off",
-          "votes": 1787,
+          "votes": 1795,
           "pct": "13.6"
         },
         {
           "title": "Seen on the Screen with Jacqueline Coley",
-          "votes": 625,
+          "votes": 627,
           "pct": "4.7"
         }
       ]
@@ -36,31 +36,31 @@
     {
       "name": "Comedy",
       "url": "https://vote.webbyawards.com/PublicVoting#/2026/podcasts/individual-episode/comedy",
-      "total": 5599,
+      "total": 5610,
       "entries": [
         {
           "title": "Paul Rudd 3.0 on TYSO",
-          "votes": 2496,
+          "votes": 2501,
           "pct": "44.6"
         },
         {
           "title": "When The Cops Say No, We Say Yes",
-          "votes": 1149,
+          "votes": 1151,
           "pct": "20.5"
         },
         {
           "title": "The Nightly",
-          "votes": 761,
+          "votes": 762,
           "pct": "13.6"
         },
         {
           "title": "On Par with Maury Povich Podcast/Kathy Griffin Talks About Being  The Most Hated Woman In America in 1-On-1 Interview With Maury",
-          "votes": 623,
+          "votes": 625,
           "pct": "11.1"
         },
         {
           "title": "Wisecrack",
-          "votes": 570,
+          "votes": 571,
           "pct": "10.2"
         }
       ]
