@@ -1,29 +1,29 @@
 {
-  "updated": "2026-04-14T06:05:12.771031+00:00",
+  "updated": "2026-04-14T08:12:38.380747+00:00",
   "categories": [
     {
       "name": "Best Video Podcast Host",
       "url": "https://vote.webbyawards.com/PublicVoting#/2026/podcasts/features/best-video-podcast-host",
-      "total": 13959,
+      "total": 13991,
       "entries": [
         {
           "title": "The Don Lemon Show",
-          "votes": 6661,
+          "votes": 6677,
           "pct": "47.7"
         },
         {
           "title": "This Is Gavin Newsom",
-          "votes": 2774,
+          "votes": 2778,
           "pct": "19.9"
         },
         {
           "title": "In the Test Kitchen",
-          "votes": 1983,
+          "votes": 1990,
           "pct": "14.2"
         },
         {
           "title": "Take Your Shoes Off",
-          "votes": 1879,
+          "votes": 1884,
           "pct": "13.5"
         },
         {
@@ -36,31 +36,31 @@
     {
       "name": "Comedy",
       "url": "https://vote.webbyawards.com/PublicVoting#/2026/podcasts/individual-episode/comedy",
-      "total": 5950,
+      "total": 5962,
       "entries": [
         {
           "title": "Paul Rudd 3.0 on TYSO",
-          "votes": 2651,
-          "pct": "44.6"
+          "votes": 2655,
+          "pct": "44.5"
         },
         {
           "title": "When The Cops Say No, We Say Yes",
-          "votes": 1220,
+          "votes": 1224,
           "pct": "20.5"
         },
         {
           "title": "The Nightly",
-          "votes": 815,
+          "votes": 816,
           "pct": "13.7"
         },
         {
           "title": "On Par with Maury Povich Podcast/Kathy Griffin Talks About Being  The Most Hated Woman In America in 1-On-1 Interview With Maury",
-          "votes": 656,
+          "votes": 658,
           "pct": "11.0"
         },
         {
           "title": "Wisecrack",
-          "votes": 608,
+          "votes": 609,
           "pct": "10.2"
         }
       ]
