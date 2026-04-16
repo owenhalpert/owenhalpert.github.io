@@ -1,67 +1,67 @@
 {
-  "updated": "2026-04-16T06:09:37.819077+00:00",
+  "updated": "2026-04-16T08:14:40.894226+00:00",
   "categories": [
     {
       "name": "Best Video Podcast Host",
       "url": "https://vote.webbyawards.com/PublicVoting#/2026/podcasts/features/best-video-podcast-host",
-      "total": 15976,
+      "total": 0,
       "entries": [
         {
-          "title": "The Don Lemon Show",
-          "votes": 7640,
-          "pct": "47.8"
-        },
-        {
-          "title": "This Is Gavin Newsom",
-          "votes": 3144,
-          "pct": "19.7"
+          "title": "Take Your Shoes Off",
+          "votes": 0,
+          "pct": "0.0"
         },
         {
           "title": "In the Test Kitchen",
-          "votes": 2333,
-          "pct": "14.6"
+          "votes": 0,
+          "pct": "0.0"
         },
         {
-          "title": "Take Your Shoes Off",
-          "votes": 2084,
-          "pct": "13.0"
+          "title": "The Don Lemon Show",
+          "votes": 0,
+          "pct": "0.0"
+        },
+        {
+          "title": "This Is Gavin Newsom",
+          "votes": 0,
+          "pct": "0.0"
         },
         {
           "title": "Seen on the Screen with Jacqueline Coley",
-          "votes": 775,
-          "pct": "4.9"
+          "votes": 0,
+          "pct": "0.0"
         }
       ]
     },
     {
       "name": "Comedy",
       "url": "https://vote.webbyawards.com/PublicVoting#/2026/podcasts/individual-episode/comedy",
-      "total": 6923,
+      "total": 0,
       "entries": [
         {
-          "title": "Paul Rudd 3.0 on TYSO",
-          "votes": 3003,
-          "pct": "43.4"
-        },
-        {
           "title": "When The Cops Say No, We Say Yes",
-          "votes": 1457,
-          "pct": "21.0"
+          "votes": 0,
+          "pct": "0.0"
         },
         {
           "title": "The Nightly",
-          "votes": 959,
-          "pct": "13.9"
-        },
-        {
-          "title": "On Par with Maury Povich Podcast/Kathy Griffin Talks About Being  The Most Hated Woman In America in 1-On-1 Interview With Maury",
-          "votes": 783,
-          "pct": "11.3"
+          "votes": 0,
+          "pct": "0.0"
         },
         {
           "title": "Wisecrack",
-          "votes": 721,
-          "pct": "10.4"
+          "votes": 0,
+          "pct": "0.0"
+        },
+        {
+          "title": "Paul Rudd 3.0 on TYSO",
+          "votes": 0,
+          "pct": "0.0"
+        },
+        {
+          "title": "On Par with Maury Povich Podcast/Kathy Griffin Talks About Being  The Most Hated Woman In America in 1-On-1 Interview With Maury",
+          "votes": 0,
+          "pct": "0.0"
         }
       ]
     }
