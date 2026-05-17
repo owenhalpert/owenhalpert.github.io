@@ -80,6 +80,7 @@
 
         .main {
             padding: 0;
+            padding-bottom: 50px;
         }
 
         .section-header {
@@ -180,45 +181,78 @@
             }
         }
 
-        #now-playing {
+        #site-footer {
             position: fixed;
             bottom: 0;
+            left: 200px;
             right: 0;
-            max-width: 320px;
+            height: 50px;
             border-top: 2px solid #111;
-            border-left: 2px solid #111;
+            background: #fff;
+            display: flex;
+            align-items: stretch;
             font-size: 0.72rem;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            display: none;
-            align-items: stretch;
-            overflow: hidden;
-            background: linear-gradient(270deg, #fff, #fde8f0, #e8f0fd, #e8fdf0, #fff);
-            background-size: 400% 100%;
-            animation: np-gradient 8s ease infinite;
+            z-index: 50;
         }
 
-        @keyframes np-gradient {
-            0%   { background-position: 0% 50%; }
-            33%  { background-position: 50% 50%; }
-            66%  { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        #now-playing .np-inner {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 4px;
-            padding: 8px 14px;
-            min-width: 0;
-        }
-
-        #now-playing .np-top {
+        #footer-movie {
+            flex: 1;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 10px;
+            padding: 0 24px;
+            border-right: 1px solid #ddd;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        #footer-music {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            padding: 0 24px;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .footer-poster {
+            width: 22px;
+            height: 33px;
+            object-fit: cover;
+            border: 1px solid #111;
+            flex-shrink: 0;
+        }
+
+        .footer-label {
+            color: #888;
+            flex-shrink: 0;
+        }
+
+        .footer-link {
+            color: #111;
+            text-decoration: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: inherit;
+            font-weight: inherit;
+            letter-spacing: inherit;
+            text-transform: inherit;
+        }
+
+        .footer-link:hover {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .footer-meta {
+            color: #555;
+            flex-shrink: 0;
         }
 
         .np-bars {
@@ -247,109 +281,9 @@
             50%       { height: 12px; }
         }
 
-        #now-playing a {
-            color: #111;
-            text-decoration: none;
-            font-size: inherit;
-            font-weight: inherit;
-            letter-spacing: inherit;
-            text-transform: inherit;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        #now-playing a:hover {
-            text-decoration: underline;
-            text-underline-offset: 3px;
-        }
-
-        #now-playing .label {
-            color: #888;
-            margin-right: 6px;
-        }
-
-        #latest-movie {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            max-width: 320px;
-            border-top: 2px solid #111;
-            border-right: 2px solid #111;
-            font-size: 0.72rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            display: none;
-            align-items: stretch;
-            overflow: hidden;
-            background: #f5f2eb;
-        }
-
-        #latest-movie .movie-inner {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            min-width: 0;
-        }
-
-        #latest-movie .movie-poster {
-            width: 28px;
-            height: 42px;
-            object-fit: cover;
-            border: 1px solid #111;
-            background: #e7e1d8;
-            flex-shrink: 0;
-        }
-
-        #latest-movie .movie-copy {
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-            gap: 4px;
-        }
-
-        #latest-movie .movie-top {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        #latest-movie .movie-title {
-            color: #111;
-            text-decoration: none;
-            font-size: inherit;
-            font-weight: inherit;
-            letter-spacing: inherit;
-            text-transform: inherit;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        #latest-movie .movie-title:hover {
-            text-decoration: underline;
-            text-underline-offset: 3px;
-        }
-
-        #latest-movie .movie-meta {
-            color: #555;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        #latest-movie .label {
-            color: #888;
-            margin-right: 6px;
-        }
-
         @media (max-width: 640px) {
-            #now-playing,
-            #latest-movie {
-                max-width: calc(100vw - 24px);
-            }
+            .main { padding-bottom: 0; }
+            #site-footer { display: none; }
         }
     </style>
 </head>
@@ -413,113 +347,89 @@
         </div>
     </div>
 
-    <div id="now-playing"></div>
-    <div id="latest-movie"></div>
+    <footer id="site-footer">
+        <div id="footer-movie"></div>
+        <div id="footer-music"></div>
+    </footer>
 
     <script>
-        const el = document.getElementById('now-playing');
-        const movieEl = document.getElementById('latest-movie');
+        const footerMovie = document.getElementById('footer-movie');
+        const footerMusic = document.getElementById('footer-music');
 
-        async function update() {
+        async function updateMusic() {
             try {
                 const res = await fetch('https://owenhalpertgithubio.vercel.app/api/now-playing');
                 const data = await res.json();
-                if (data.title) {
-                    el.innerHTML = '';
+                if (!data.title) { footerMusic.innerHTML = ''; return; }
 
-                    const inner = document.createElement('div');
-                    inner.className = 'np-inner';
+                const bars = document.createElement('div');
+                bars.className = 'np-bars';
+                bars.append(...Array.from({length: 5}, () => document.createElement('span')));
 
-                    const top = document.createElement('div');
-                    top.className = 'np-top';
-                    const bars = document.createElement('div');
-                    bars.className = 'np-bars';
-                    bars.append(...Array.from({length: 5}, () => document.createElement('span')));
-                    const label = document.createElement('span');
-                    label.className = 'label';
-                    label.textContent = data.isPlaying ? 'Now playing' : 'Last played';
-                    top.append(bars, label);
+                const label = document.createElement('span');
+                label.className = 'footer-label';
+                label.textContent = data.isPlaying ? 'Now playing' : 'Last played';
 
-                    const link = document.createElement('a');
-                    link.href = data.url;
-                    link.target = '_blank';
-                    link.rel = 'noopener';
-                    link.textContent = `${data.artist} — ${data.title}`;
+                const link = document.createElement('a');
+                link.className = 'footer-link';
+                link.href = data.url;
+                link.target = '_blank';
+                link.rel = 'noopener';
+                link.textContent = `${data.artist} — ${data.title}`;
 
-                    inner.append(top, link);
-                    el.append(inner);
-                    el.style.display = 'flex';
-                } else {
-                    el.style.display = 'none';
-                }
+                footerMusic.replaceChildren(bars, label, link);
             } catch {
-                el.style.display = 'none';
+                footerMusic.innerHTML = '';
             }
         }
 
-        async function updateLatestMovie() {
+        async function updateMovie() {
             try {
                 const res = await fetch('https://owenhalpertgithubio.vercel.app/api/latest-movie');
                 const data = await res.json();
+                if (!data.found || !data.title) { footerMovie.innerHTML = ''; return; }
 
-                if (!data.found || !data.title) {
-                    movieEl.style.display = 'none';
-                    return;
-                }
-
-                movieEl.innerHTML = '';
-
-                const inner = document.createElement('div');
-                inner.className = 'movie-inner';
+                const nodes = [];
 
                 if (data.posterUrl) {
                     const poster = document.createElement('img');
-                    poster.className = 'movie-poster';
+                    poster.className = 'footer-poster';
                     poster.src = data.posterUrl;
                     poster.alt = '';
                     poster.loading = 'lazy';
-                    inner.append(poster);
+                    nodes.push(poster);
                 }
 
-                const copy = document.createElement('div');
-                copy.className = 'movie-copy';
-
-                const top = document.createElement('div');
-                top.className = 'movie-top';
-
                 const label = document.createElement('span');
-                label.className = 'label';
+                label.className = 'footer-label';
                 label.textContent = 'Latest watched';
-                top.append(label);
+                nodes.push(label);
 
                 const title = document.createElement('a');
-                title.className = 'movie-title';
+                title.className = 'footer-link';
                 title.href = data.url;
                 title.target = '_blank';
                 title.rel = 'noopener';
                 title.textContent = data.year ? `${data.title} (${data.year})` : data.title;
-
-                copy.append(top, title);
+                nodes.push(title);
 
                 if (data.rating) {
-                    const meta = document.createElement('div');
-                    meta.className = 'movie-meta';
+                    const meta = document.createElement('span');
+                    meta.className = 'footer-meta';
                     meta.textContent = data.rating;
-                    copy.append(meta);
+                    nodes.push(meta);
                 }
 
-                inner.append(copy);
-                movieEl.append(inner);
-                movieEl.style.display = 'flex';
+                footerMovie.replaceChildren(...nodes);
             } catch {
-                movieEl.style.display = 'none';
+                footerMovie.innerHTML = '';
             }
         }
 
-        update();
-        setInterval(update, 30000);
-        updateLatestMovie();
-        setInterval(updateLatestMovie, 300000);
+        updateMusic();
+        setInterval(updateMusic, 30000);
+        updateMovie();
+        setInterval(updateMovie, 300000);
     </script>
 </body>
 </html>
