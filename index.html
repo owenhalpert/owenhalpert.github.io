@@ -268,6 +268,89 @@
             color: #888;
             margin-right: 6px;
         }
+
+        #latest-movie {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            max-width: 320px;
+            border-top: 2px solid #111;
+            border-right: 2px solid #111;
+            font-size: 0.72rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: none;
+            align-items: stretch;
+            overflow: hidden;
+            background: #f5f2eb;
+        }
+
+        #latest-movie .movie-inner {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            min-width: 0;
+        }
+
+        #latest-movie .movie-poster {
+            width: 28px;
+            height: 42px;
+            object-fit: cover;
+            border: 1px solid #111;
+            background: #e7e1d8;
+            flex-shrink: 0;
+        }
+
+        #latest-movie .movie-copy {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            gap: 4px;
+        }
+
+        #latest-movie .movie-top {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        #latest-movie .movie-title {
+            color: #111;
+            text-decoration: none;
+            font-size: inherit;
+            font-weight: inherit;
+            letter-spacing: inherit;
+            text-transform: inherit;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #latest-movie .movie-title:hover {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        #latest-movie .movie-meta {
+            color: #555;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #latest-movie .label {
+            color: #888;
+            margin-right: 6px;
+        }
+
+        @media (max-width: 640px) {
+            #now-playing,
+            #latest-movie {
+                max-width: calc(100vw - 24px);
+            }
+        }
     </style>
 </head>
 <body>
@@ -331,9 +414,11 @@
     </div>
 
     <div id="now-playing"></div>
+    <div id="latest-movie"></div>
 
     <script>
         const el = document.getElementById('now-playing');
+        const movieEl = document.getElementById('latest-movie');
 
         async function update() {
             try {
@@ -372,8 +457,69 @@
             }
         }
 
+        async function updateLatestMovie() {
+            try {
+                const res = await fetch('https://owenhalpertgithubio.vercel.app/api/latest-movie');
+                const data = await res.json();
+
+                if (!data.found || !data.title) {
+                    movieEl.style.display = 'none';
+                    return;
+                }
+
+                movieEl.innerHTML = '';
+
+                const inner = document.createElement('div');
+                inner.className = 'movie-inner';
+
+                if (data.posterUrl) {
+                    const poster = document.createElement('img');
+                    poster.className = 'movie-poster';
+                    poster.src = data.posterUrl;
+                    poster.alt = '';
+                    poster.loading = 'lazy';
+                    inner.append(poster);
+                }
+
+                const copy = document.createElement('div');
+                copy.className = 'movie-copy';
+
+                const top = document.createElement('div');
+                top.className = 'movie-top';
+
+                const label = document.createElement('span');
+                label.className = 'label';
+                label.textContent = 'Latest watched';
+                top.append(label);
+
+                const title = document.createElement('a');
+                title.className = 'movie-title';
+                title.href = data.url;
+                title.target = '_blank';
+                title.rel = 'noopener';
+                title.textContent = data.year ? `${data.title} (${data.year})` : data.title;
+
+                copy.append(top, title);
+
+                if (data.rating) {
+                    const meta = document.createElement('div');
+                    meta.className = 'movie-meta';
+                    meta.textContent = data.rating;
+                    copy.append(meta);
+                }
+
+                inner.append(copy);
+                movieEl.append(inner);
+                movieEl.style.display = 'flex';
+            } catch {
+                movieEl.style.display = 'none';
+            }
+        }
+
         update();
         setInterval(update, 30000);
+        updateLatestMovie();
+        setInterval(updateLatestMovie, 300000);
     </script>
 </body>
 </html>
