@@ -339,7 +339,7 @@
             try {
                 const res = await fetch('https://owenhalpertgithubio.vercel.app/api/now-playing');
                 const data = await res.json();
-                if (data.isPlaying) {
+                if (data.title) {
                     el.innerHTML = '';
 
                     const inner = document.createElement('div');
@@ -352,7 +352,7 @@
                     bars.append(...Array.from({length: 5}, () => document.createElement('span')));
                     const label = document.createElement('span');
                     label.className = 'label';
-                    label.textContent = 'Now playing';
+                    label.textContent = data.isPlaying ? 'Now playing' : 'Last played';
                     top.append(bars, label);
 
                     const link = document.createElement('a');

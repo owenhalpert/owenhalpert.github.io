@@ -19,7 +19,7 @@ async function getAccessToken() {
 }
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', 'https://owenhalpert.com');
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 's-maxage=30');
 
   const access_token = await getAccessToken();
@@ -28,20 +28,38 @@ export default async function handler(req, res) {
     headers: { Authorization: `Bearer ${access_token}` },
   });
 
-  if (response.status === 204 || response.status >= 400) {
+  if (response.status !== 204 && response.status < 400) {
+    const song = await response.json();
+    if (song?.item) {
+      return res.status(200).json({
+        isPlaying: song.is_playing,
+        title: song.item.name,
+        artist: song.item.artists.map(a => a.name).join(', '),
+        url: song.item.external_urls.spotify,
+      });
+    }
+  }
+
+  // Nothing currently playing — fall back to recently played
+  const recentRes = await fetch('https://api.spotify.com/v1/me/player/recently-played?limit=1', {
+    headers: { Authorization: `Bearer ${access_token}` },
+  });
+
+  if (recentRes.status >= 400) {
     return res.status(200).json({ isPlaying: false });
   }
 
-  const song = await response.json();
+  const recent = await recentRes.json();
+  const track = recent?.items?.[0]?.track;
 
-  if (!song?.item) {
+  if (!track) {
     return res.status(200).json({ isPlaying: false });
   }
 
   return res.status(200).json({
-    isPlaying: song.is_playing,
-    title: song.item.name,
-    artist: song.item.artists.map(a => a.name).join(', '),
-    url: song.item.external_urls.spotify,
+    isPlaying: false,
+    title: track.name,
+    artist: track.artists.map(a => a.name).join(', '),
+    url: track.external_urls.spotify,
   });
 }
