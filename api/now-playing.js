@@ -15,26 +15,17 @@ async function getAccessToken() {
     }),
   });
   const data = await res.json();
-  if (!data.access_token) {
-    console.error('Token exchange failed:', JSON.stringify(data));
-  }
   return data.access_token;
 }
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Cache-Control', 's-maxage=30');
 
   const access_token = await getAccessToken();
 
   if (!access_token) {
-    return res.status(200).json({
-      isPlaying: false,
-      _debug: 'no_token',
-      _hasId: !!process.env.SPOTIFY_CLIENT_ID,
-      _hasSecret: !!process.env.SPOTIFY_CLIENT_SECRET,
-      _hasRefresh: !!process.env.SPOTIFY_REFRESH_TOKEN,
-    });
+    return res.status(200).json({ isPlaying: false });
   }
 
   const response = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
@@ -51,7 +42,6 @@ export default async function handler(req, res) {
         url: song.item.external_urls.spotify,
       });
     }
-    return res.status(200).json({ isPlaying: false, _debug: 'no_item', _status: response.status });
   }
 
   // Nothing currently playing — fall back to recently played
@@ -60,14 +50,14 @@ export default async function handler(req, res) {
   });
 
   if (recentRes.status >= 400) {
-    return res.status(200).json({ isPlaying: false, _debug: 'recent_failed', _status: recentRes.status });
+    return res.status(200).json({ isPlaying: false });
   }
 
   const recent = await recentRes.json();
   const track = recent?.items?.[0]?.track;
 
   if (!track) {
-    return res.status(200).json({ isPlaying: false, _debug: 'no_recent_track' });
+    return res.status(200).json({ isPlaying: false });
   }
 
   return res.status(200).json({
