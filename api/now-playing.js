@@ -15,6 +15,9 @@ async function getAccessToken() {
     }),
   });
   const data = await res.json();
+  if (!data.access_token) {
+    console.error('Token exchange failed:', JSON.stringify(data));
+  }
   return data.access_token;
 }
 
